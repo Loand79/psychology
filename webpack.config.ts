@@ -1,10 +1,17 @@
 import path from 'path';
-import webpack from "webpack";
+import type {Configuration} from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
-export default (env: any) => {
-    const config: webpack.Configuration = {
-        mode: env.mode,
+type Mode = 'production' | 'development'
+
+interface EnvVariables {
+    mode: Mode;
+
+}
+
+export default (env: EnvVariables) => {
+    const config: Configuration = {
+        mode: env.mode ?? 'development',
         module: {
             rules: [
                 {
