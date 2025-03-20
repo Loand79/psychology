@@ -19,6 +19,10 @@ export default (env: EnvVariables) => {
         module: {
             rules: [
                 {
+                    test: /\.css$/i,
+                    use: ["css-loader"],
+                },
+                {
                     test: /\.tsx?$/,
                     use: 'ts-loader',
                     exclude: /node_modules/,
@@ -29,7 +33,7 @@ export default (env: EnvVariables) => {
             extensions: ['.tsx', '.ts', '.js'],
         },
         entry: {
-            psy: path.resolve(__dirname, 'src/index.ts')
+            psy: path.resolve(__dirname, 'src/index.tsx')
         },
         output: {
             path: path.resolve(__dirname, 'build'),
