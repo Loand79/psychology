@@ -1,14 +1,10 @@
 import path from 'path';
 import webpack from 'webpack';
 import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-
-type Mode = 'production' | 'development'
-
-interface EnvVariables {
-    mode: Mode;
-    port: number;
-}
+import {buildDevServer} from "./config/build/buildDevServer";
+import {buildPlugins} from "./config/build/buildPlugins";
+import {EnvVariables} from "./config/build/types/config";
+import {buildResolvers} from "./config/build/buildResolvers";
 
 export default (env: EnvVariables) => {
 
@@ -17,21 +13,9 @@ export default (env: EnvVariables) => {
     const config: webpack.Configuration = {
         mode: env.mode ?? 'development',
         module: {
-            rules: [
-                {
-                    test: /\.css$/i,
-                    use: ["css-loader"],
-                },
-                {
-                    test: /\.tsx?$/,
-                    use: 'ts-loader',
-                    exclude: /node_modules/,
-                },
-            ],
+            rules:
         },
-        resolve: {
-            extensions: ['.tsx', '.ts', '.js'],
-        },
+        resolve: buildResolvers(),
         entry: {
             psy: path.resolve(__dirname, 'src/index.tsx')
         },
@@ -40,18 +24,9 @@ export default (env: EnvVariables) => {
             filename: '[name].[contenthash].js',
             clean: true,
         },
-        plugins: [
-            new HtmlWebpackPlugin({
-                title: 'Psychology',
-                // filename: "psy.html",
-                template: path.resolve(__dirname, 'public/index.html')
-            })
-        ],
+        plugins: buildPlugins(),
         devtool: isDev ? 'inline-source-map' : false,
-        devServer: isDev ? {
-            port: env.port ?? 3000,
-            open: true,
-        } : undefined
+        devServer: isDev ? buildDevServer(env.port) : undefined
 
     }
     return config
