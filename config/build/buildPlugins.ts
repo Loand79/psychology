@@ -1,6 +1,5 @@
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import path from "path";
 import {BuildOptions} from "./types/config";
 import {Configuration} from "webpack";
 
@@ -12,7 +11,7 @@ export const buildPlugins = ({paths}: BuildOptions): Configuration['plugins']=> 
         new HtmlWebpackPlugin({
             title: 'Psychology',
             // filename: "psy.html",
-            template: path.resolve(__dirname, 'public/index.html')
+            template: paths.html
         })
     ]
 }

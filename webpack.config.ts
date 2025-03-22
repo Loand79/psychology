@@ -1,33 +1,24 @@
-import path from 'path';
 import webpack from 'webpack';
-import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
-import {buildDevServer} from "./config/build/buildDevServer";
-import {buildPlugins} from "./config/build/buildPlugins";
-import {EnvVariables} from "./config/build/types/config";
-import {buildResolvers} from "./config/build/buildResolvers";
+import {BuildPaths, EnvVariables} from "./config/build/types/config";
+import {buildWebpackConfig} from "./config/build/buildWebpackConfig";
+import path from "path";
 
 export default (env: EnvVariables) => {
 
     const isDev = env.mode === 'development'
 
-    const config: webpack.Configuration = {
-        mode: env.mode ?? 'development',
-        module: {
-            rules:
-        },
-        resolve: buildResolvers(),
-        entry: {
-            psy: path.resolve(__dirname, 'src/index.tsx')
-        },
-        output: {
-            path: path.resolve(__dirname, 'build'),
-            filename: '[name].[contenthash].js',
-            clean: true,
-        },
-        plugins: buildPlugins(),
-        devtool: isDev ? 'inline-source-map' : false,
-        devServer: isDev ? buildDevServer(env.port) : undefined
-
+    const paths: BuildPaths = {
+        entry: path.resolve(__dirname, 'src/index.tsx'),
+        html: path.resolve(__dirname, 'public/index.html'),
+        output: path.resolve(__dirname, 'build'),
     }
+
+    const config: webpack.Configuration = buildWebpackConfig({
+        mode: env.mode ?? 'development',
+        isDev,
+        paths,
+        port: env.port ?? 5000
+    });
+
     return config
 }
