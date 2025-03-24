@@ -1,21 +1,32 @@
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import {ModuleOptions} from 'webpack'
+import {BuildOptions} from "./types/config";
 
-export const buildLoaders = (): ModuleOptions['rules'] => {
+export const buildLoaders = ({isDev}: BuildOptions): ModuleOptions['rules'] => {
 
-    const scss = {
+    const scssLoader = {
         test: /\.s[ac]ss$/i,
         use: [
-            MiniCssExtractPlugin.loader,
-            "css-loader",
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            {
+                loader: "css-loader",
+                options: {
+                    modules: {
+                        namedExport: false,
+                        // auto: (resPath => return resPath.endsWith('.module.scss'))
+                        exportLocalsConvention: 'as-is',
+                        localIdentName: isDev ? '[path][name]__[local]' : '[hash:base64:8]'
+                    }
+                }
+            },
             "sass-loader"
         ],
     }
-    const tsx = {
+    const tsxLoader = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
     }
 
-    return [scss, tsx]
+    return [scssLoader, tsxLoader]
 }
