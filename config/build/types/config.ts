@@ -9,6 +9,7 @@ export interface BuildPaths {
     entry: string;
     html: string;
     output: string;
+    alias: string;
 }
 
 export interface BuildOptions {

@@ -2,6 +2,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import {BuildOptions} from "./types/config";
 import {Configuration} from "webpack";
+import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
 
 export const buildPlugins = ({paths, mode}: BuildOptions): Configuration['plugins']=> {
 
@@ -19,6 +20,9 @@ export const buildPlugins = ({paths, mode}: BuildOptions): Configuration['plugin
             new MiniCssExtractPlugin({
                 filename: 'style.css'
             })
+        )
+        plugins.push(
+            new BundleAnalyzerPlugin()
         )
     }
 
